@@ -9,11 +9,42 @@ var dx=2;
 var dy=-2;
 //set radius
 var radius=10;
-//paddle dimentions
+//paddle dimensions
 var paddleHeight = 10;
 var paddleWidth = 75;
 //paddle initial location
 var paddleX = (canvas.width-paddleWidth)/2;
+//brick properties
+var brickRowCount=3;
+var brickColCount=5;
+var brickWidth=75;
+var brickHeight=20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
+//initializing the bricks
+var bricks=[]
+for(var i=0;i<brickRowCount;i++)
+{bricks[i]=[];
+for(var j=0;j<brickColCount;j++)
+bricks[i][j]={x:0,y:0};
+}
+//drawing the bricks
+function drawBricks()
+{
+	for(var i=0;i<brickRowCount;i++)
+		for(var j=0;j<brickColCount;j++)
+		{	
+			bricks[i][j].x=(j*(brickWidth+brickPadding))+brickOffsetLeft;
+			bricks[i][j].y=(i*(brickHeight+brickPadding))+brickOffsetTop;
+			ctx.beginPath();
+			ctx.rect(bricks[i][j].x,bricks[i][j].y, brickWidth, brickHeight);
+			ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+		}
+
+}
 //keypress event values
 var rightPressed = false;
 var leftPressed = false;
@@ -50,6 +81,7 @@ if(y>canvas.height-radius)
 paddleX=rightPressed && paddleX+7<canvas.width-paddleWidth?paddleX+7:paddleX;
 paddleX=leftPressed && paddleX-7>0?paddleX-7:paddleX;
 //draw everything
+drawBricks();
 drawball();
 drawpaddle();
 }
