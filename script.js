@@ -1,6 +1,7 @@
 //init canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+var score=0;
 //paddle dimensions
 var paddleHeight = 10;
 var paddleWidth = 75;
@@ -25,9 +26,17 @@ var brickOffsetLeft = 30;
 //initializing the bricks
 var bricks=[]
 for(var i=0;i<brickRowCount;i++)
-{bricks[i]=[];
+{
+bricks[i]=[];
 for(var j=0;j<brickColCount;j++)
 bricks[i][j]={x:0,y:0,status:true};
+}
+//Scoreboard
+function result()
+{
+ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: "+score, 8, 20);
 }
 //drawing the bricks
 function drawBricks()
@@ -58,6 +67,12 @@ for(var i=0;i<brickRowCount;i++)
 			{
 			dy=-dy;
 			b.status=false;
+			score++;
+			if(score>=brickRowCount*brickColCount)
+			{
+			alert("game over!");
+			document.location.reload();
+			}
 			}
 		}
 }
@@ -90,6 +105,7 @@ if(y>canvas.height-radius)
 	dy=-dy;
 	else
 	{
+	result();
 	alert("game over!");
 	document.location.reload();}
 }
@@ -100,7 +116,9 @@ paddleX=leftPressed && paddleX-7>0?paddleX-7:paddleX;
 drawBricks();
 drawball();
 drawpaddle();
+result();
 collisionDetection();
+
 }
 //paddle draw
 function drawpaddle()
