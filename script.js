@@ -1,19 +1,19 @@
 //init canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-//set initial ball location
-var x=50;
-var y=50;
-//set ball speed
-var dx=2;
-var dy=-2;
-//set radius
-var radius=10;
 //paddle dimensions
 var paddleHeight = 10;
 var paddleWidth = 75;
 //paddle initial location
 var paddleX = (canvas.width-paddleWidth)/2;
+//set initial ball location
+var x=paddleX;
+var y=canvas.height-30;
+//set ball speed
+var dx=2;
+var dy=-2;
+//set radius
+var radius=10;
 //brick properties
 var brickRowCount=3;
 var brickColCount=5;
@@ -27,14 +27,15 @@ var bricks=[]
 for(var i=0;i<brickRowCount;i++)
 {bricks[i]=[];
 for(var j=0;j<brickColCount;j++)
-bricks[i][j]={x:0,y:0};
+bricks[i][j]={x:0,y:0,status:true};
 }
 //drawing the bricks
 function drawBricks()
 {
 	for(var i=0;i<brickRowCount;i++)
 		for(var j=0;j<brickColCount;j++)
-		{	
+		{	if(bricks[i][j].status)
+			{
 			bricks[i][j].x=(j*(brickWidth+brickPadding))+brickOffsetLeft;
 			bricks[i][j].y=(i*(brickHeight+brickPadding))+brickOffsetTop;
 			ctx.beginPath();
@@ -42,8 +43,23 @@ function drawBricks()
 			ctx.fillStyle = "#0095DD";
             ctx.fill();
             ctx.closePath();
+			}
 		}
 
+}
+//collision detection wth bricks
+function collisionDetection()
+{
+for(var i=0;i<brickRowCount;i++)
+		for(var j=0;j<brickColCount;j++)
+		{	
+		var b=bricks[i][j];
+		if(x>b.x&&x<b.x+brickWidth&&y>b.y&&y<b.y+brickHeight && b.status)
+			{
+			dy=-dy;
+			b.status=false;
+			}
+		}
 }
 //keypress event values
 var rightPressed = false;
@@ -77,13 +93,14 @@ if(y>canvas.height-radius)
 	alert("game over!");
 	document.location.reload();}
 }
-//updating paddle location based o keypress
+//updating paddle location based on keypress
 paddleX=rightPressed && paddleX+7<canvas.width-paddleWidth?paddleX+7:paddleX;
 paddleX=leftPressed && paddleX-7>0?paddleX-7:paddleX;
 //draw everything
 drawBricks();
 drawball();
 drawpaddle();
+collisionDetection();
 }
 //paddle draw
 function drawpaddle()
